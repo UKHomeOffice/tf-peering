@@ -1,2 +1,4 @@
 # DQ Terraform Module
-[insert some docs and usage guide]
+
+Module for VPC peering configuration between two VPCs.
+The module allows inter and intra AWS account VPC peering.

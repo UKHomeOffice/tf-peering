@@ -28,7 +28,6 @@ class TestE2E(unittest.TestCase):
                 dest = "aws.dest"
               }
             vpc_dest_account_id = "1234"
-            vpc_source_account_id = "1234"
             vpc_dest_vpc_id = "1234"
             vpc_source_vpc_id = "1234"
             vpc_source_name = "foo"

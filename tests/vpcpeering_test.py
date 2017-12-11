@@ -53,7 +53,6 @@ class TestE2E(unittest.TestCase):
                 aws.source = "aws.APPS"
                 aws.dest = "aws.MOCK"
               }
-            vpc_dest_account_id = "12345"
             vpc_dest_vpc_id = "${aws_vpc.dest.id}"
             vpc_source_vpc_id = "${aws_vpc.source.id}"
             }

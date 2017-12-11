@@ -6,6 +6,10 @@ provider "aws" {
   alias = "dest"
 }
 
+data "aws_caller_identity" "dest" {
+  provider = "aws.dest"
+}
+
 data "aws_vpc" "dest" {
   id = "${var.vpc_dest_vpc_id}"
 }
@@ -18,7 +22,7 @@ resource "aws_vpc_peering_connection" "request" {
   provider = "aws.source"
 
   auto_accept   = "false"
-  peer_owner_id = "${var.vpc_dest_account_id}"
+  peer_owner_id = "${data.aws_caller_identity.dest.account_id}"
   peer_vpc_id   = "${var.vpc_dest_vpc_id}"
   vpc_id        = "${var.vpc_source_vpc_id}"
 

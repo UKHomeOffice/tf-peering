@@ -8,13 +8,15 @@ class TestE2E(unittest.TestCase):
     def setUpClass(self):
         self.snippet = """
 
-            provider "aws.source" {
+            provider "aws" {
+              alias = "APPS"
               region = "eu-west-2"
               skip_credentials_validation = true
               skip_get_ec2_platforms = true
             }
 
-            provider "aws.dest" {
+            provider "aws" {
+              alias = "MOCK"
               region = "eu-west-2"
               skip_credentials_validation = true
               skip_get_ec2_platforms = true
@@ -24,8 +26,8 @@ class TestE2E(unittest.TestCase):
               source = "./mymodule"
 
               providers = {
-                source = "aws.source"
-                dest = "aws.dest"
+                source = "aws.APPS"
+                dest = "aws.MOCK"
               }
             vpc_dest_account_id = "1234"
             vpc_dest_vpc_id = "1234"

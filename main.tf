@@ -1,3 +1,11 @@
+provider "aws" {
+  alias = "source"
+}
+
+provider "aws" {
+  alias = "dest"
+}
+
 resource "aws_vpc_peering_connection" "request" {
   provider = "aws.source"
 

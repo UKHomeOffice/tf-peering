@@ -26,8 +26,8 @@ class TestE2E(unittest.TestCase):
               source = "./mymodule"
 
               providers = {
-                source = "aws.APPS"
-                dest = "aws.MOCK"
+                "aws.source" = "aws.APPS"
+                "aws.dest" = "aws.MOCK"
               }
             vpc_dest_account_id = "1234"
             vpc_dest_vpc_id = "1234"

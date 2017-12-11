@@ -6,6 +6,14 @@ provider "aws" {
   alias = "dest"
 }
 
+data "aws_vpc" "dest" {
+  id = "${var.vpc_dest_vpc_id}"
+}
+
+data "aws_vpc" "source" {
+  id = "${var.vpc_source_vpc_id}"
+}
+
 resource "aws_vpc_peering_connection" "request" {
   provider = "aws.source"
 
@@ -19,7 +27,7 @@ resource "aws_vpc_peering_connection" "request" {
   }
 
   tags = {
-    Name = "${format("%s - %s", var.vpc_source_name, var.vpc_dest_name)}"
+    Name = "${format("%s - %s", data.aws_vpc.source.tags, data.aws_vpc.dest.tags)}"
   }
 }
 
@@ -34,6 +42,6 @@ resource "aws_vpc_peering_connection_accepter" "accept" {
   }
 
   tags = {
-    Name = "${format("%s - %s", var.vpc_dest_name, var.vpc_source_name)}"
+    Name = "${format("%s - %s", data.aws_vpc.dest.tags, data.aws_vpc.source.tags)}"
   }
 }

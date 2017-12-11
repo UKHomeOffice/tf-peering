@@ -9,6 +9,12 @@ class TestE2E(unittest.TestCase):
         self.snippet = """
 
             provider "aws" {
+              region = "eu-west-2"
+              skip_credentials_validation = true
+              skip_get_ec2_platforms = true
+            }
+
+            provider "aws" {
               alias = "APPS"
               region = "eu-west-2"
               skip_credentials_validation = true
@@ -22,30 +28,40 @@ class TestE2E(unittest.TestCase):
               skip_get_ec2_platforms = true
             }
 
+            resource "aws_vpc" "source" {
+              provider   = "aws.APPS"
+              cidr_block = "10.0.0.0/16"
+
+              tags {
+                  Name = "sourcevpc"
+                }
+            }
+
+            resource "aws_vpc" "dest" {
+              provider   = "aws.MOCK"
+              cidr_block = "10.2.0.0/16"
+
+               tags {
+                 Name = "destvpc"
+               }
+             }
+
             module "vpcpeering" {
               source = "./mymodule"
 
               providers = {
-                "aws.source" = "aws.APPS"
-                "aws.dest" = "aws.MOCK"
+                aws.source = "aws.APPS"
+                aws.dest = "aws.MOCK"
               }
-            vpc_dest_account_id = "1234"
-            vpc_dest_vpc_id = "1234"
-            vpc_source_vpc_id = "1234"
-            vpc_source_name = "foo"
-            vpc_dest_name = "bar"
+            vpc_dest_account_id = "12345"
+            vpc_dest_vpc_id = "${aws_vpc.dest.id}"
+            vpc_source_vpc_id = "${aws_vpc.source.id}"
             }
         """
         self.result = Runner(self.snippet).result
 
     def test_root_destroy(self):
         self.assertEqual(self.result["destroy"], False)
-
-    def test_name_prefix_request(self):
-        self.assertEqual(self.result['vpcpeering']["aws_vpc_peering_connection.request"]["tags.Side"], "Requester")
-
-    def test_name_prefix_accept(self):
-        self.assertEqual(self.result['vpcpeering']["aws_vpc_peering_connection_accepter.accept"]["tags.Side"], "Accepter")
 
     def test_request_auto_accept(self):
         self.assertEqual(self.result['vpcpeering']["aws_vpc_peering_connection.request"]["auto_accept"], "false")

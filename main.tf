@@ -10,12 +10,14 @@ data "aws_caller_identity" "dest" {
   provider = "aws.dest"
 }
 
-data "aws_vpc" "dest" {
-  id = "${var.vpc_dest_vpc_id}"
+data "aws_vpc" "source" {
+  provider = "aws.source"
+  id       = "${var.vpc_source_vpc_id}"
 }
 
-data "aws_vpc" "source" {
-  id = "${var.vpc_source_vpc_id}"
+data "aws_vpc" "dest" {
+  provider = "aws.dest"
+  id       = "${var.vpc_dest_vpc_id}"
 }
 
 resource "aws_vpc_peering_connection" "request" {
